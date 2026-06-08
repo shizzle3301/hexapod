@@ -1,0 +1,25 @@
+category,item,qty,unit,approx_cost_gbp,supplier_example,notes
+Compute,Raspberry Pi 5 (4 GB),1,unit,60.00,PiHut / Raspberry Pi,Main controller
+Compute,PCA9685 16-ch servo HAT,1,unit,8.00,Amazon / AliExpress,I2C servo driver; stack 2 for >16 channels
+Servos,MG90S metal gear servo,18,unit,2.00,Amazon / AliExpress,2–3 per leg; 6 legs = 18 total
+Servos,DS3225 25kg servo (optional),6,unit,9.00,Amazon,Substitute for coxa joints if more torque needed
+Adhesion,Miniature 12V vacuum pump,1,unit,15.00,Amazon / eBay,Parker or equivalent; ~10 L/min flow
+Adhesion,Solenoid valve 12V N.O. 1/8",6,unit,4.00,Amazon / AliExpress,Normally-open so robot holds on wall if power lost
+Adhesion,Silicone suction cup 35mm,6,unit,0.50,Amazon,Food-grade silicone; replace frequently
+Adhesion,Silicone tube 4mm OD / 2mm ID,2,metre,1.00,Amazon,Connects pump → manifold → valves
+Adhesion,Barbed tee / manifold fittings,6,unit,0.30,Amazon,1 per leg branch
+Power,3S LiPo 2200mAh 30C,1,unit,20.00,HobbyKing / Amazon,Main battery; 11.1V nominal
+Power,5V 5A BEC / regulator,1,unit,6.00,Amazon,Powers Pi and servos from LiPo
+Power,12V 5A BEC,1,unit,8.00,Amazon,Powers pump and solenoids
+Power,XT60 connectors,4,unit,0.50,HobbyKing,Battery connector
+Power,LiPo charger (balance),1,unit,20.00,HobbyKing,Essential safety item
+Sensing,MPU-6050 IMU breakout,1,unit,2.00,Amazon / AliExpress,6-DOF accelerometer + gyro
+Sensing,FSR 0.5" force sensitive resistor (optional),6,unit,3.00,Adafruit,Foot slip detection
+Electronics,Relay module 8-channel 5V,1,unit,5.00,Amazon,Controls solenoid valves from Pi GPIO
+Electronics,Dupont jumper wires (M-F / F-F),1,pack,3.00,Amazon,
+Electronics,Proto board / Veroboard,1,unit,2.00,Amazon,Signal wiring tidyup
+Structure,PETG filament 1kg (black),1,spool,22.00,Amazon,Chassis and leg parts; ASA if outdoors
+Structure,M2 × 6mm screws,50,unit,0.05,Amazon,Servo mounting
+Structure,M3 × 8mm screws,30,unit,0.06,Amazon,Chassis assembly
+Structure,M2 brass heat-set inserts,30,unit,0.10,Amazon,For 3D-printed threads
+Total,,,,,, ~£250–£300 depending on suppliers

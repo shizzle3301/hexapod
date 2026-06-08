@@ -1,0 +1,101 @@
+# config/robot_default.yaml
+# Copy this file to config/robot.yaml and edit for your build.
+# This file is tracked by git. robot.yaml is gitignored (personal calibration).
+
+# ── Simulation ───────────────────────────────────────────────────────────────
+# Set to true to run without hardware (auto-set if RPi.GPIO is not importable)
+simulate: false
+
+# ── Body geometry (metres) ────────────────────────────────────────────────────
+body:
+  width:         0.080   # m — centre to coxa mount, lateral
+  length_front:  0.060   # m — centre to front pair, longitudinal
+  length_mid:    0.000   # m — centre to middle pair
+  length_rear:  -0.060   # m — centre to rear pair
+
+# ── Leg geometry (metres) ─────────────────────────────────────────────────────
+leg:
+  coxa_length:   0.030
+  femur_length:  0.060
+  tibia_length:  0.080
+
+  # Joint limits (degrees — converted to radians internally)
+  coxa_min_deg:  -60
+  coxa_max_deg:   60
+  femur_min_deg: -90
+  femur_max_deg:  90
+  tibia_min_deg: -120
+  tibia_max_deg:   10
+
+# ── Default foot stance (relative to coxa mount, metres) ─────────────────────
+stance:
+  x:  0.10
+  y:  0.00
+  z: -0.06
+
+# ── Gait defaults ─────────────────────────────────────────────────────────────
+gait:
+  default:        wave     # tripod | wave | ripple
+  step_length:    0.040    # m
+  step_height:    0.025    # m
+  step_duration:  0.600    # s per step
+  control_freq:   50.0     # Hz
+
+# ── Servo HAT (PCA9685) ───────────────────────────────────────────────────────
+servo_hat:
+  i2c_address:    0x40
+  pwm_freq_hz:    50
+
+  # Per-leg servo calibration
+  # Format: [coxa, femur, tibia] each with {neutral_us, min_us, max_us, reversed}
+  calibration:
+    leg_0:  # front-right
+      coxa:  {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: false}
+      femur: {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: false}
+      tibia: {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: false}
+    leg_1:  # mid-right
+      coxa:  {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: false}
+      femur: {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: false}
+      tibia: {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: false}
+    leg_2:  # rear-right
+      coxa:  {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: false}
+      femur: {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: false}
+      tibia: {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: false}
+    leg_3:  # front-left
+      coxa:  {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: true}
+      femur: {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: true}
+      tibia: {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: true}
+    leg_4:  # mid-left
+      coxa:  {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: true}
+      femur: {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: true}
+      tibia: {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: true}
+    leg_5:  # rear-left
+      coxa:  {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: true}
+      femur: {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: true}
+      tibia: {neutral_us: 1500, min_us: 500, max_us: 2500, reversed: true}
+
+# ── Adhesion / suction system ─────────────────────────────────────────────────
+adhesion:
+  pump_pin:       25      # BCM GPIO — PWM to vacuum pump enable/speed
+  pump_freq_hz:   1000
+  pump_duty_idle: 60.0    # % PWM when all feet planted
+  pump_duty_swing: 100.0  # % PWM during foot swing (pre-charge)
+  active_low:     true    # true if relay board is active-low
+
+  valve_pins:            # BCM GPIO per leg (0–5)
+    - 17   # leg 0 front-right
+    - 18   # leg 1 mid-right
+    - 27   # leg 2 rear-right
+    - 22   # leg 3 front-left
+    - 23   # leg 4 mid-left
+    - 24   # leg 5 rear-left
+
+  # Timing margins (seconds)
+  valve_close_lead: 0.05  # close valve this long before foot lifts
+  valve_open_lag:   0.05  # open valve this long after foot plants
+
+# ── IMU (MPU-6050) ────────────────────────────────────────────────────────────
+imu:
+  enabled:      true
+  i2c_address:  0x68
+  filter_alpha: 0.95      # complementary filter weight (0=gyro only, 1=accel only)

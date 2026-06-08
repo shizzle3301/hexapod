@@ -1,0 +1,21 @@
+# Core
+numpy>=1.24
+pyyaml>=6.0
+
+# Raspberry Pi hardware (install only on target hardware)
+# RPi.GPIO>=0.7.1
+# adafruit-circuitpython-pca9685>=3.4
+# adafruit-circuitpython-motor>=3.4
+# adafruit-blinka>=8.0
+
+# Testing
+pytest>=7.0
+pytest-cov>=4.0
+
+# Optional: visualisation and development tools
+matplotlib>=3.7      # workspace visualiser
+numpy-stl>=3.0       # load STL files for planning
+rich>=13.0           # pretty terminal output
+
+# Optional: ROS2 bridge (install separately via apt)
+# rclpy
