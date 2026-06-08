@@ -9,7 +9,7 @@
 
 namespace gecko {
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 std::string to_string(PadState s) {
     switch (s) {
         case PadState::FREE:       return "FREE";
@@ -22,7 +22,7 @@ std::string to_string(PadState s) {
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 GeckoAdhesion::GeckoAdhesion(const Config& cfg, bool simulation)
     : cfg_(cfg), simulation_(simulation)
 {
@@ -30,7 +30,6 @@ GeckoAdhesion::GeckoAdhesion(const Config& cfg, bool simulation)
         state_entry_time_[i] = std::chrono::steady_clock::now();
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 void GeckoAdhesion::init() {
     LOG_INFO("GeckoAdhesion: initialising " +
              std::to_string(NUM_PADS) + " gecko pads");
@@ -48,33 +47,33 @@ void GeckoAdhesion::init() {
         pad_cfg_[i].min_adhesion_n     = cfg_.get<double>(
             "gecko.min_adhesion_n",  2.0);
 
-        // Set peel servo to 0 (engaged-ready position)
+        //set peel to 0
         set_peel_servo(i, 0.0);
     }
 
     LOG_INFO("GeckoAdhesion: all pads initialised in FREE state");
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 void GeckoAdhesion::update() {
     for (int i = 0; i < NUM_PADS; ++i) {
         update_pad(i);
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 void GeckoAdhesion::update_pad(int idx) {
     auto& d = pad_data_[idx];
     auto  now = std::chrono::steady_clock::now();
     double elapsed_ms = std::chrono::duration<double, std::milli>(
                             now - state_entry_time_[idx]).count();
 
-    // Read sensor
+    //read sensor
     d.contact_force_n = read_fsr(idx);
 
     switch (d.state) {
         case PadState::FREE:
-            // Detect unexpected contact
+            //detect unexpected cont
             if (d.contact_force_n > pad_cfg_[idx].min_adhesion_n * 0.5) {
                 d.surface_detected = true;
                 LOG_DEBUG("Pad " + std::to_string(idx) + ": surface detected");
@@ -82,7 +81,7 @@ void GeckoAdhesion::update_pad(int idx) {
             break;
 
         case PadState::CONTACTING:
-            // Wait for confirmed contact
+            //wait for confirmed cont
             if (d.contact_force_n >= pad_cfg_[idx].min_adhesion_n * 0.5) {
                 transition(idx, PadState::PRESSING);
             } else if (elapsed_ms > 500.0) {
@@ -93,7 +92,7 @@ void GeckoAdhesion::update_pad(int idx) {
             break;
 
         case PadState::PRESSING:
-            // Maintain press for press_time_ms to maximise contact area
+            //maintain press
             if (elapsed_ms >= pad_cfg_[idx].press_time_ms) {
                 if (d.contact_force_n >= pad_cfg_[idx].min_adhesion_n) {
                     transition(idx, PadState::ADHERED);
@@ -110,7 +109,7 @@ void GeckoAdhesion::update_pad(int idx) {
             break;
 
         case PadState::ADHERED:
-            // Continuous monitoring — detect unexpected peel
+            //detect peel!!!!!!!!!!!!
             if (d.contact_force_n < pad_cfg_[idx].min_adhesion_n * 0.3) {
                 LOG_ERROR("Pad " + std::to_string(idx) +
                           ": ADHESION LOST unexpectedly!");
@@ -122,11 +121,11 @@ void GeckoAdhesion::update_pad(int idx) {
             break;
 
         case PadState::PEELING:
-            // Peel actuator is working — wait for force to drop
+            //peel act working
             set_peel_servo(idx, pad_cfg_[idx].peel_angle_deg);
             if (d.contact_force_n < pad_cfg_[idx].min_adhesion_n * 0.2
                 || elapsed_ms > 300.0) {
-                // Peel complete
+                //peel all done C :
                 set_peel_servo(idx, 0.0);
                 transition(idx, PadState::FREE);
                 LOG_INFO("Pad " + std::to_string(idx) + ": disengaged ✓");
@@ -134,7 +133,7 @@ void GeckoAdhesion::update_pad(int idx) {
             break;
 
         case PadState::FAILED:
-            // Fault state — operator must clear
+            //somefing is fukt clear rn!!!!!!!! 
             break;
     }
 }
