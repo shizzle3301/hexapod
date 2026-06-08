@@ -133,7 +133,7 @@ void GeckoAdhesion::update_pad(int idx) {
             break;
 
         case PadState::FAILED:
-            //somefing is fukt clear rn!!!!!!!! 
+            //somefing is prolly so fukt if this happens #pleaseJeususNo
             break;
     }
 }
