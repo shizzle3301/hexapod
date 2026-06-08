@@ -138,7 +138,7 @@ void GeckoAdhesion::update_pad(int idx) {
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 void GeckoAdhesion::transition(int idx, PadState new_state) {
     PadState old_state = pad_data_[idx].state;
     if (old_state == new_state) return;
@@ -149,7 +149,7 @@ void GeckoAdhesion::transition(int idx, PadState new_state) {
     if (callback_) callback_(idx, new_state);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 void GeckoAdhesion::engage(int pad_idx) {
     if (pad_idx < 0 || pad_idx >= NUM_PADS) return;
     auto& d = pad_data_[pad_idx];
@@ -164,7 +164,7 @@ void GeckoAdhesion::engage(int pad_idx) {
     transition(pad_idx, PadState::CONTACTING);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 bool GeckoAdhesion::disengage(int pad_idx) {
     if (pad_idx < 0 || pad_idx >= NUM_PADS) return false;
 
@@ -179,7 +179,7 @@ bool GeckoAdhesion::disengage(int pad_idx) {
     return true;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 void GeckoAdhesion::disengage_all() {
     LOG_INFO("GeckoAdhesion: disengaging ALL pads");
     for (int i = 0; i < NUM_PADS; ++i) {
@@ -188,12 +188,12 @@ void GeckoAdhesion::disengage_all() {
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 bool GeckoAdhesion::is_adhered(int pad_idx) const {
     return pad_data_[pad_idx].state == PadState::ADHERED;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 bool GeckoAdhesion::can_disengage(int pad_idx, bool wall_mode) const {
     int minimum = wall_mode ? MIN_ADHERED_WALL : MIN_ADHERED_FLOOR;
 
@@ -205,7 +205,7 @@ bool GeckoAdhesion::can_disengage(int pad_idx, bool wall_mode) const {
     return other_adhered >= minimum;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 int GeckoAdhesion::adhered_count() const {
     int n = 0;
     for (int i = 0; i < NUM_PADS; ++i)
@@ -213,7 +213,6 @@ int GeckoAdhesion::adhered_count() const {
     return n;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 AdhesionStatus GeckoAdhesion::status() const {
     AdhesionStatus s;
     s.adhered_count   = 0;
@@ -232,14 +231,14 @@ AdhesionStatus GeckoAdhesion::status() const {
     s.wall_safe    = (s.adhered_count >= MIN_ADHERED_WALL);
     s.system_ok    = s.minimum_met;
 
-    // Check for any faults
+    //check for fault
     for (int i = 0; i < NUM_PADS; ++i)
         if (pad_data_[i].fault) { s.system_ok = false; break; }
 
     return s;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 void GeckoAdhesion::log_status() const {
     auto s = status();
     std::string line = "Gecko pads [";
@@ -259,7 +258,7 @@ void GeckoAdhesion::log_status() const {
     LOG_INFO(line);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 double GeckoAdhesion::read_fsr(int pad_idx) const {
     if (simulation_) return sim_contact_force(pad_idx);
 
@@ -271,7 +270,6 @@ double GeckoAdhesion::read_fsr(int pad_idx) const {
     return 0.0;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 double GeckoAdhesion::sim_contact_force(int pad_idx) const {
     auto& d = pad_data_[pad_idx];
     switch (d.state) {
@@ -283,7 +281,7 @@ double GeckoAdhesion::sim_contact_force(int pad_idx) const {
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 void GeckoAdhesion::set_peel_servo(int pad_idx, double angle_deg) {
     if (simulation_) {
         LOG_DEBUG("Pad " + std::to_string(pad_idx) +
@@ -297,7 +295,6 @@ void GeckoAdhesion::set_peel_servo(int pad_idx, double angle_deg) {
 #endif
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 void GeckoAdhesion::run_self_test() {
     LOG_INFO("GeckoAdhesion: running self-test on all pads");
     for (int i = 0; i < NUM_PADS; ++i) {
@@ -309,4 +306,4 @@ void GeckoAdhesion::run_self_test() {
     LOG_INFO("GeckoAdhesion: self-test complete");
 }
 
-} // namespace gecko
+]
