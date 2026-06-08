@@ -1,7 +1,3 @@
-/**
- * @file GaitController.cpp
- * @brief Gait patterns — tripod, wave, ripple, gecko-wall
- */
 
 #include "locomotion/GaitController.hpp"
 #include "utils/Logger.hpp"
@@ -21,7 +17,6 @@ std::string to_string(GaitType g) {
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 GaitController::GaitController(const Config& cfg) : cfg_(cfg) {
     set_gait(GaitType::WAVE);
 }
@@ -60,7 +55,6 @@ void GaitController::set_gait(GaitType type) {
 void GaitController::set_params(const GaitParams& p) { params_ = p; }
 void GaitController::reset()                          { cycle_phase_ = 0.0; }
 
-// ─────────────────────────────────────────────────────────────────────────────
 GaitController::LegPhases GaitController::compute_phases(GaitType type) const {
     switch (type) {
         case GaitType::TRIPOD:     return TRIPOD_PHASES;
@@ -72,12 +66,11 @@ GaitController::LegPhases GaitController::compute_phases(GaitType type) const {
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 void GaitController::step(std::array<std::unique_ptr<Leg>, 6>& legs,
                            const Vec3& body_velocity, double yaw_rate, double dt)
 {
     if (body_velocity.norm() < 0.1 && std::abs(yaw_rate) < 0.01) {
-        // Standing still — all legs in stance
+        //standing still
         return;
     }
 
@@ -91,13 +84,13 @@ void GaitController::step(std::array<std::unique_ptr<Leg>, 6>& legs,
     for (int i = 0; i < 6; ++i) {
         double leg_phase = std::fmod(cycle_phase_ + phases_[i], 1.0);
 
-        // Swing phase: leg_phase in [1 - (1-duty_factor), 1) → [duty, 1)
+        //swing phase
         bool in_swing = (leg_phase >= params_.duty_factor);
 
         if (in_swing) {
-            // Check gecko safety before allowing swing on wall
+            //check stable
             if (params_.wall_mode && !can_lift_leg(i, legs)) {
-                // Force this leg to stay in stance
+                //force stance
                 legs[i]->stance_step(body_velocity * dt);
                 continue;
             }
@@ -109,14 +102,13 @@ void GaitController::step(std::array<std::unique_ptr<Leg>, 6>& legs,
             legs[i]->swing_step(next_fh, lift_h, swing_progress);
             legs[i]->set_planted(false);
         } else {
-            // Stance phase — push body
+            //push
             legs[i]->stance_step(body_velocity * dt);
             legs[i]->set_planted(true);
         }
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 bool GaitController::can_lift_leg(int idx,
     const std::array<std::unique_ptr<Leg>, 6>& legs) const
 {
@@ -127,11 +119,10 @@ bool GaitController::can_lift_leg(int idx,
     return adhered >= gecko::GeckoAdhesion::MIN_ADHERED_WALL;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 Vec3 GaitController::compute_next_foothold(int leg_idx, const Vec3& body_vel,
                                             double yaw) const
 {
-    // Default foothold = current tip + step_length in body_vel direction
+    //default footholf=current tip + step_length in body_vel direction
     double step = params_.step_length_mm;
     Vec3 dir = body_vel.norm() > 0.01 ? body_vel.normalised() : Vec3{1,0,0};
     return dir * step;
@@ -155,4 +146,4 @@ std::vector<int> GaitController::stance_legs() const {
     return st;
 }
 
-} // namespace hexapod
+} 
